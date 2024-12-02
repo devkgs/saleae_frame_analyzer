@@ -1,3 +1,5 @@
+[![Pylint](https://github.com/devkgs/saleae_frame_analyzer/actions/workflows/pylint.yml/badge.svg?branch=main)](https://github.com/devkgs/saleae_frame_analyzer/actions/workflows/pylint.yml)
+
 # saleae_frame_analyzer
 A python script that extract SPI frames from Saleae Logic 2 App SPI export file.  
 
