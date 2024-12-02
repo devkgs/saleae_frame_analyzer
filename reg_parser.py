@@ -25,7 +25,7 @@ def add_arguments(argument_parser: argparse.ArgumentParser) -> None:
                                  help='Print summary')
     argument_parser.add_argument(dest='in_file', metavar='FILE', help="Saleae export data file")
 
-class DataByte():
+class DataByte(): # pylint: disable=too-few-public-methods
     """
     Handle result data for one byte
     """
@@ -42,11 +42,11 @@ class Protocol(ABC):
     """
     Protocol abstract class.
     """
-    def __init__(self, args):
-        self.file = args.in_file
-        self.addr_filter = args.reg_addr
-        self.arg_print_line = args.print_lines
-        self.arg_print_time = args.print_time
+    def __init__(self, cmd_args):
+        self.file = cmd_args.in_file
+        self.addr_filter = cmd_args.reg_addr
+        self.arg_print_line = cmd_args.print_lines
+        self.arg_print_time = cmd_args.print_time
         self.frames = []
         self.total_frames = 0
 
@@ -56,7 +56,6 @@ class Protocol(ABC):
         Read the complete file and store result in frames variable
         :return:
         """
-        pass
 
     @abstractmethod
     def print_frames(self):
@@ -64,11 +63,10 @@ class Protocol(ABC):
         Print the data of the variable frames
         :return:
         """
-        pass
 
     def print_summary(self):
         """
-        
+
         :return:
         """
         print("-------------------------------------")
@@ -81,8 +79,8 @@ class SPIProtocol(Protocol):
     """
     SPI specific protocol
     """
-    def __init__(self, args):
-        super().__init__(args)
+    def __init__(self, cmd_args):
+        super().__init__(cmd_args)
         self.current_frame = []
         #self.frames = []
 
@@ -90,7 +88,7 @@ class SPIProtocol(Protocol):
         first_frame = True
         line_number = 0
         addr_detected = False
-        with open(self.file, 'r') as infile:
+        with open(self.file, 'r', encoding="utf-8") as infile:
             next(infile)  # Skip the first line
             line_number = line_number + 1
             for line in infile:
