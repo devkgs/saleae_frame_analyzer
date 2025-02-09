@@ -51,7 +51,7 @@ class Protocol(ABC):
         self.total_frames = 0
 
     @abstractmethod
-    def read_file(self):
+    def parse_file(self):
         """
         Read the complete file and store result in frames variable
         :return:
@@ -84,7 +84,7 @@ class SPIProtocol(Protocol):
         self.current_frame = []
         #self.frames = []
 
-    def read_file(self):
+    def parse_file(self):
         first_frame = True
         line_number = 0
         addr_detected = False
@@ -139,7 +139,7 @@ if __name__ == "__main__":
     args = parser.parse_args()
 
     analyzer = SPIProtocol(args)
-    analyzer.read_file()
+    analyzer.parse_file()
     analyzer.print_frames()
 
     if args.print_summary:
