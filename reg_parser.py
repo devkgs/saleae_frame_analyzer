@@ -17,13 +17,14 @@ def add_arguments(argument_parser: argparse.ArgumentParser) -> None:
     :return:
     """
     argument_parser.description = "A python program to parse Saleae Logic Analyzer 2 export files."
+    argument_parser.add_argument(dest='in_file', metavar='FILE', help="Saleae export data file")
     argument_parser.add_argument('-a', dest='reg_addr', metavar='<reg_addr>', nargs='+',
                                  help="Addr(s) of the reg to filter")
     argument_parser.add_argument('-l', action='store_true', dest='print_lines', help='Print lines')
     argument_parser.add_argument('-t', action='store_true', dest='print_time', help='Print time')
     argument_parser.add_argument('-s', action='store_true', dest='print_summary',
                                  help='Print summary')
-    argument_parser.add_argument(dest='in_file', metavar='FILE', help="Saleae export data file")
+
 
 class DataByte(): # pylint: disable=too-few-public-methods
     """
@@ -112,15 +113,15 @@ class SPIProtocol(Protocol):
                                 self.current_frame.append(DataByte(data_in = splitted_line[4],
                                                                    data_out = splitted_line[5],
                                                                    time = splitted_line[2],
-                                                                    line=line_number))
+                                                                   line=line_number))
                                 addr_detected = True
                             first_frame = False
-                        else:
+                        else:   # Not the first frame
                             if addr_detected:
                                 self.current_frame.append(DataByte(data_in = splitted_line[4],
                                                                    data_out = splitted_line[5],
                                                                    time = splitted_line[2],
-                                                                    line=line_number))
+                                                                   line=line_number))
 
     def print_frames(self):
         for element in self.frames:
