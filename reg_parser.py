@@ -9,6 +9,8 @@ type: enable, result, disable
 
 import argparse
 from abc import ABC, abstractmethod
+from enum import unique, IntEnum
+
 
 def add_arguments(argument_parser: argparse.ArgumentParser) -> None:
     """
@@ -52,7 +54,7 @@ class Protocol(ABC):
         self.total_frames = 0
 
     @abstractmethod
-    def parse_file(self):
+    def parse_file(self) :
         """
         Read the complete file and store result in frames variable
         :return:
@@ -77,6 +79,17 @@ class Protocol(ABC):
 
 
 class SPIProtocol(Protocol):
+    # Constants
+    @unique
+    class Positions(IntEnum):
+        """Example: SPI,"result",0.0002,3.36e-06,0x01,0x03 """
+        PROTOCOL_TYPE = 0
+        DELIMITER = 1
+        TIME = 2
+        DURATION = 3
+        MOSI_VALUE = 4
+        MISO_VALUE = 5
+
     """
     SPI specific protocol
     """
@@ -96,31 +109,31 @@ class SPIProtocol(Protocol):
                 line = line.rstrip()  # remove whitespaces
                 line_number = line_number + 1
                 splitted_line = line.split(',')  # to array
-                if splitted_line[1] == '"enable"':
+                if splitted_line[self.Positions.DELIMITER] == '"enable"':
                     enable_detected = True
                     self.total_frames += 1
-                elif splitted_line[1] == '"disable"':
+                elif splitted_line[self.Positions.DELIMITER] == '"disable"':
                     if addr_detected :
                         self.frames.append(self.current_frame[:])
                         self.current_frame.clear()
                     enable_detected = False
                     first_frame = True
                     addr_detected = False
-                elif splitted_line[1] == '"result"':
+                elif splitted_line[self.Positions.DELIMITER] == '"result"':
                     if enable_detected:
                         if first_frame:
-                            if splitted_line[4] in self.addr_filter:
-                                self.current_frame.append(DataByte(data_in = splitted_line[4],
-                                                                   data_out = splitted_line[5],
-                                                                   time = splitted_line[2],
+                            if splitted_line[4] in self.addr_filter:    # check if frame addr is in addr_filter
+                                self.current_frame.append(DataByte(data_in = splitted_line[self.Positions.MOSI_VALUE],
+                                                                   data_out = splitted_line[self.Positions.MISO_VALUE],
+                                                                   time = splitted_line[self.Positions.TIME],
                                                                    line=line_number))
                                 addr_detected = True
                             first_frame = False
                         else:   # Not the first frame
                             if addr_detected:
-                                self.current_frame.append(DataByte(data_in = splitted_line[4],
-                                                                   data_out = splitted_line[5],
-                                                                   time = splitted_line[2],
+                                self.current_frame.append(DataByte(data_in = splitted_line[self.Positions.MOSI_VALUE],
+                                                                   data_out = splitted_line[self.Positions.MISO_VALUE],
+                                                                   time = splitted_line[self.Positions.TIME],
                                                                    line=line_number))
 
     def print_frames(self):
