@@ -92,6 +92,5 @@ SPI,"disable",0.0016,8e-09,,
                 self.assertEqual(2, count)
 
 
-
 if __name__ == '__main__':
     unittest.main()

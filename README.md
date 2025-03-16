@@ -14,43 +14,29 @@ A python script that extract SPI frames from Saleae Logic 2 App SPI export file.
 See https://github.com/idaholab/Saleae_Output_Parser 
 
 ## Running the script
-``python3 <path_to_output_file>``  
+``python3 -- <path_to_output_file>``  
 
 You may use the ```-h``` flag to see the various options that are available. 
 
 The output will be written to stdout. Use the ```>``` or ```>>``` characters to send the output to a file.
 
-### Options
+## Options
 ```commandline
-  -h, --help     show this help message and exit
-  -a <reg_addr>  Addr of the reg to filter
-  -l             Print lines
-  -t             Print time
-  -s             Print summary
+  -h, --help            show this help message and exit
+  -a <reg_addr> [<reg_addr> ...] Addr(s) of the reg to filter
+  -l                    Print lines
+  -t                    Print time
+  -s                    Print summary
 ```
 
-### Example
-Locate all frames with address 0xFC. Print line number, time and summary.  
-```python3 data/spi_export -a 0xFC -l -t -s```
+## Example
+Locate all frames with address 0x01:<br>
+```python3 reg_parser.py data/spi_capture_example.csv -a 0x01```
 
-Output
-```commandline
-318 0.0032885 0xFC 0xFD
-319 0.0032985 0xFD 0xFE
-320 0.0033085 0xFE 0xFF
+Locate all frames with addresses 0x01 or 0x16:<br>
+```python3 reg_parser.py data/spi_capture_example.csv -a 0x01 0x16```
 
-638 0.0066165 0xFC 0xFD
-639 0.0066265 0xFD 0xFE
-640 0.0066365 0xFE 0xFF
+# data directory
+In data directory, there is spi capture examples.
 
-...
-
-8318 0.0864885 0xFC 0xFD
-8319 0.0864985 0xFD 0xFE
-8320 0.0865085 0xFE 0xFF
-
--------------------------------------
-Frames found =  26
-Frames total =  1666
--------------------------------------
-```
+saleae_spi_export.csv: 
