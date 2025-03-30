@@ -1,5 +1,7 @@
 """
+reg_parser_test.py
 
+Unit tests for reg_parser.py
 """
 import unittest
 import argparse
