@@ -122,7 +122,8 @@ class SPIProtocol(Protocol):
                 elif splitted_line[self.Positions.DELIMITER] == '"result"':
                     if enable_detected:
                         if first_frame:
-                            if splitted_line[4] in self.addr_filter: #check if frame addr is in addr_filter
+                            # check if frame addr is in addr_filter
+                            if splitted_line[4] in self.addr_filter:
                                 self.current_frame.append(DataByte(
                                     data_in = splitted_line[self.Positions.MOSI_VALUE],
                                     data_out = splitted_line[self.Positions.MISO_VALUE],
