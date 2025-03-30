@@ -79,6 +79,9 @@ class Protocol(ABC):
 
 
 class SPIProtocol(Protocol):
+    """
+    SPI specific protocol
+    """
     # Constants
     @unique
     class Positions(IntEnum):
@@ -90,9 +93,6 @@ class SPIProtocol(Protocol):
         MOSI_VALUE = 4
         MISO_VALUE = 5
 
-    """
-    SPI specific protocol
-    """
     def __init__(self, cmd_args):
         super().__init__(cmd_args)
         self.current_frame = []
@@ -122,19 +122,21 @@ class SPIProtocol(Protocol):
                 elif splitted_line[self.Positions.DELIMITER] == '"result"':
                     if enable_detected:
                         if first_frame:
-                            if splitted_line[4] in self.addr_filter:    # check if frame addr is in addr_filter
-                                self.current_frame.append(DataByte(data_in = splitted_line[self.Positions.MOSI_VALUE],
-                                                                   data_out = splitted_line[self.Positions.MISO_VALUE],
-                                                                   time = splitted_line[self.Positions.TIME],
-                                                                   line=line_number))
+                            if splitted_line[4] in self.addr_filter: #check if frame addr is in addr_filter
+                                self.current_frame.append(DataByte(
+                                    data_in = splitted_line[self.Positions.MOSI_VALUE],
+                                    data_out = splitted_line[self.Positions.MISO_VALUE],
+                                    time = splitted_line[self.Positions.TIME],
+                                    line=line_number))
                                 addr_detected = True
                             first_frame = False
                         else:   # Not the first frame
                             if addr_detected:
-                                self.current_frame.append(DataByte(data_in = splitted_line[self.Positions.MOSI_VALUE],
-                                                                   data_out = splitted_line[self.Positions.MISO_VALUE],
-                                                                   time = splitted_line[self.Positions.TIME],
-                                                                   line=line_number))
+                                self.current_frame.append(DataByte(
+                                    data_in = splitted_line[self.Positions.MOSI_VALUE],
+                                    data_out = splitted_line[self.Positions.MISO_VALUE],
+                                    time = splitted_line[self.Positions.TIME],
+                                    line=line_number))
 
     def print_frames(self):
         for element in self.frames:
